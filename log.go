@@ -6,6 +6,7 @@ import (
 	"github.com/ltcsuite/lnd/autopilot"
 	"github.com/ltcsuite/lnd/build"
 	"github.com/ltcsuite/lnd/chainntnfs"
+	"github.com/ltcsuite/lnd/chainntnfs/esploranotify"
 	"github.com/ltcsuite/lnd/chainreg"
 	"github.com/ltcsuite/lnd/chanacceptor"
 	"github.com/ltcsuite/lnd/chanbackup"
@@ -15,6 +16,7 @@ import (
 	"github.com/ltcsuite/lnd/cluster"
 	"github.com/ltcsuite/lnd/contractcourt"
 	"github.com/ltcsuite/lnd/discovery"
+	"github.com/ltcsuite/lnd/esplora"
 	"github.com/ltcsuite/lnd/funding"
 	"github.com/ltcsuite/lnd/healthcheck"
 	"github.com/ltcsuite/lnd/htlcswitch"
@@ -179,6 +181,8 @@ func SetupLoggers(root *build.RotatingLogWriter, interceptor signal.Interceptor)
 	AddSubLogger(root, btcwallet.Subsystem, interceptor, btcwallet.UseLogger)
 	AddSubLogger(root, rpcwallet.Subsystem, interceptor, rpcwallet.UseLogger)
 	AddSubLogger(root, peersrpc.Subsystem, interceptor, peersrpc.UseLogger)
+	AddSubLogger(root, esplora.Subsystem, interceptor, esplora.UseLogger)
+	AddSubLogger(root, esploranotify.Subsystem, interceptor, esploranotify.UseLogger)
 }
 
 // AddSubLogger is a helper method to conveniently create and register the
