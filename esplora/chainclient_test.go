@@ -4,12 +4,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/btcsuite/btcd/btcutil"
-	"github.com/btcsuite/btcd/chaincfg"
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/rpcclient"
-	"github.com/btcsuite/btcd/wire"
-	"github.com/btcsuite/btcwallet/chain"
+	"github.com/ltcsuite/ltcd/chaincfg"
+	"github.com/ltcsuite/ltcd/chaincfg/chainhash"
+	"github.com/ltcsuite/ltcd/ltcutil"
+	"github.com/ltcsuite/ltcd/rpcclient"
+	"github.com/ltcsuite/ltcd/wire"
+	"github.com/ltcsuite/ltcwallet/chain"
 	"github.com/stretchr/testify/require"
 )
 
@@ -155,10 +155,10 @@ func TestChainClientNotifyReceived(t *testing.T) {
 
 	// Create a test address.
 	pubKeyHash := make([]byte, 20)
-	addr, err := btcutil.NewAddressPubKeyHash(pubKeyHash, &chaincfg.MainNetParams)
+	addr, err := ltcutil.NewAddressPubKeyHash(pubKeyHash, &chaincfg.MainNetParams)
 	require.NoError(t, err)
 
-	err = chainClient.NotifyReceived([]btcutil.Address{addr})
+	err = chainClient.NotifyReceived([]ltcutil.Address{addr})
 	require.NoError(t, err)
 
 	chainClient.watchedAddrsMtx.RLock()
@@ -360,11 +360,11 @@ func TestChainClientMultipleAddresses(t *testing.T) {
 	chainClient := NewChainClient(client, &chaincfg.MainNetParams)
 
 	// Create multiple test addresses.
-	addrs := make([]btcutil.Address, 5)
+	addrs := make([]ltcutil.Address, 5)
 	for i := 0; i < 5; i++ {
 		pubKeyHash := make([]byte, 20)
 		pubKeyHash[0] = byte(i)
-		addr, err := btcutil.NewAddressPubKeyHash(pubKeyHash, &chaincfg.MainNetParams)
+		addr, err := ltcutil.NewAddressPubKeyHash(pubKeyHash, &chaincfg.MainNetParams)
 		require.NoError(t, err)
 		addrs[i] = addr
 	}

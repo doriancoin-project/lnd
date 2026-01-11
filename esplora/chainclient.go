@@ -8,16 +8,16 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/btcsuite/btcd/btcjson"
-	"github.com/btcsuite/btcd/btcutil"
-	"github.com/btcsuite/btcd/chaincfg"
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/rpcclient"
-	"github.com/btcsuite/btcd/txscript"
-	"github.com/btcsuite/btcd/wire"
-	"github.com/btcsuite/btcwallet/chain"
-	"github.com/btcsuite/btcwallet/waddrmgr"
-	"github.com/btcsuite/btcwallet/wtxmgr"
+	"github.com/ltcsuite/ltcd/btcjson"
+	"github.com/ltcsuite/ltcd/chaincfg"
+	"github.com/ltcsuite/ltcd/chaincfg/chainhash"
+	"github.com/ltcsuite/ltcd/ltcutil"
+	"github.com/ltcsuite/ltcd/rpcclient"
+	"github.com/ltcsuite/ltcd/txscript"
+	"github.com/ltcsuite/ltcd/wire"
+	"github.com/ltcsuite/ltcwallet/chain"
+	"github.com/ltcsuite/ltcwallet/waddrmgr"
+	"github.com/ltcsuite/ltcwallet/wtxmgr"
 )
 
 const (
@@ -75,11 +75,11 @@ type ChainClient struct {
 
 	// watchedAddrs tracks addresses being watched.
 	watchedAddrsMtx sync.RWMutex
-	watchedAddrs    map[string]btcutil.Address
+	watchedAddrs    map[string]ltcutil.Address
 
 	// watchedOutpoints tracks outpoints being watched.
 	watchedOutpointsMtx sync.RWMutex
-	watchedOutpoints    map[wire.OutPoint]btcutil.Address
+	watchedOutpoints    map[wire.OutPoint]ltcutil.Address
 
 	quit chan struct{}
 	wg   sync.WaitGroup
@@ -96,8 +96,8 @@ func NewChainClient(client *Client, chainParams *chaincfg.Params) *ChainClient {
 		headerCache:      make(map[chainhash.Hash]*wire.BlockHeader),
 		heightToHash:     make(map[int32]*chainhash.Hash),
 		notificationChan: make(chan interface{}, 100),
-		watchedAddrs:     make(map[string]btcutil.Address),
-		watchedOutpoints: make(map[wire.OutPoint]btcutil.Address),
+		watchedAddrs:     make(map[string]ltcutil.Address),
+		watchedOutpoints: make(map[wire.OutPoint]ltcutil.Address),
 		quit:             make(chan struct{}),
 	}
 }
@@ -410,7 +410,7 @@ func (c *ChainClient) FilterBlocks(
 
 // filterAddressInBlocks checks if an address has any activity in the given blocks.
 func (c *ChainClient) filterAddressInBlocks(ctx context.Context,
-	addr btcutil.Address,
+	addr ltcutil.Address,
 	blocks []wtxmgr.BlockMeta) ([]*wire.MsgTx, uint32, error) {
 
 	addrStr := addr.EncodeAddress()
@@ -505,8 +505,8 @@ func (c *ChainClient) GetUtxo(op *wire.OutPoint, pkScript []byte,
 }
 
 // Rescan rescans from the specified height for addresses.
-func (c *ChainClient) Rescan(blockHash *chainhash.Hash, addrs []btcutil.Address,
-	outpoints map[wire.OutPoint]btcutil.Address) error {
+func (c *ChainClient) Rescan(blockHash *chainhash.Hash, addrs []ltcutil.Address,
+	outpoints map[wire.OutPoint]ltcutil.Address) error {
 
 	log.Infof("Rescan called for %d addresses, %d outpoints",
 		len(addrs), len(outpoints))
@@ -565,7 +565,7 @@ func (c *ChainClient) Rescan(blockHash *chainhash.Hash, addrs []btcutil.Address,
 
 // scanAddressHistory scans an address for historical transactions.
 func (c *ChainClient) scanAddressHistory(ctx context.Context,
-	addr btcutil.Address, startHeight int32) error {
+	addr ltcutil.Address, startHeight int32) error {
 
 	addrStr := addr.EncodeAddress()
 
@@ -619,7 +619,7 @@ func (c *ChainClient) scanAddressHistory(ctx context.Context,
 }
 
 // NotifyReceived marks an address for transaction notifications.
-func (c *ChainClient) NotifyReceived(addrs []btcutil.Address) error {
+func (c *ChainClient) NotifyReceived(addrs []ltcutil.Address) error {
 	log.Infof("NotifyReceived called with %d addresses", len(addrs))
 
 	c.watchedAddrsMtx.Lock()
@@ -646,7 +646,7 @@ func (c *ChainClient) NotifyReceived(addrs []btcutil.Address) error {
 
 // scanAddressForExistingTxs scans an address for existing transactions.
 func (c *ChainClient) scanAddressForExistingTxs(ctx context.Context,
-	addr btcutil.Address) error {
+	addr ltcutil.Address) error {
 
 	addrStr := addr.EncodeAddress()
 
@@ -871,7 +871,7 @@ func (c *ChainClient) processBlockAtHeight(ctx context.Context, height int32) er
 // checkWatchedAddresses checks if any watched addresses have new activity.
 func (c *ChainClient) checkWatchedAddresses(height int32) {
 	c.watchedAddrsMtx.RLock()
-	addrs := make([]btcutil.Address, 0, len(c.watchedAddrs))
+	addrs := make([]ltcutil.Address, 0, len(c.watchedAddrs))
 	for _, addr := range c.watchedAddrs {
 		addrs = append(addrs, addr)
 	}
@@ -941,6 +941,6 @@ func (c *ChainClient) cacheHeader(height int32, hash *chainhash.Hash,
 }
 
 // scriptFromAddress creates a pkScript from an address.
-func scriptFromAddress(addr btcutil.Address, params *chaincfg.Params) ([]byte, error) {
+func scriptFromAddress(addr ltcutil.Address, params *chaincfg.Params) ([]byte, error) {
 	return txscript.PayToAddrScript(addr)
 }

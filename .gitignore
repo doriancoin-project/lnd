@@ -78,3 +78,6 @@ coverage.txt
 
 *.pb.swift
 *.java
+
+# All test data generated from rapid.
+*/testdata

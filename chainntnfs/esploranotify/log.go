@@ -1,6 +1,6 @@
 package esploranotify
 
-import "github.com/btcsuite/btclog/v2"
+import "github.com/btcsuite/btclog"
 
 // Subsystem defines the logging code for this subsystem.
 const Subsystem = "ESPN"

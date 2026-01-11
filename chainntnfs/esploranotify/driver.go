@@ -3,10 +3,10 @@ package esploranotify
 import (
 	"fmt"
 
-	"github.com/btcsuite/btcd/chaincfg"
-	"github.com/lightningnetwork/lnd/blockcache"
-	"github.com/lightningnetwork/lnd/chainntnfs"
-	"github.com/lightningnetwork/lnd/esplora"
+	"github.com/ltcsuite/lnd/blockcache"
+	"github.com/ltcsuite/lnd/chainntnfs"
+	"github.com/ltcsuite/lnd/esplora"
+	"github.com/ltcsuite/ltcd/chaincfg"
 )
 
 // createNewNotifier creates a new instance of the EsploraNotifier from a

@@ -10,14 +10,14 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/btcsuite/btcd/btcutil"
-	"github.com/btcsuite/btcd/chaincfg"
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/wire"
-	"github.com/lightningnetwork/lnd/blockcache"
-	"github.com/lightningnetwork/lnd/chainntnfs"
-	"github.com/lightningnetwork/lnd/esplora"
-	"github.com/lightningnetwork/lnd/queue"
+	"github.com/ltcsuite/lnd/blockcache"
+	"github.com/ltcsuite/lnd/chainntnfs"
+	"github.com/ltcsuite/lnd/esplora"
+	"github.com/ltcsuite/lnd/queue"
+	"github.com/ltcsuite/ltcd/chaincfg"
+	"github.com/ltcsuite/ltcd/chaincfg/chainhash"
+	"github.com/ltcsuite/ltcd/ltcutil"
+	"github.com/ltcsuite/ltcd/wire"
 )
 
 const (
@@ -841,7 +841,7 @@ func (e *EsploraNotifier) RegisterBlockEpochNtfn(
 }
 
 // GetBlock attempts to retrieve a block from the Esplora API.
-func (e *EsploraNotifier) GetBlock(hash chainhash.Hash) (*btcutil.Block,
+func (e *EsploraNotifier) GetBlock(hash chainhash.Hash) (*ltcutil.Block,
 	error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)

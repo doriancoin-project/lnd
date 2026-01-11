@@ -7,10 +7,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/wire"
-	"github.com/lightningnetwork/lnd/esplora"
-	graphdb "github.com/lightningnetwork/lnd/graph/db"
+	graphdb "github.com/ltcsuite/lnd/channeldb"
+	"github.com/ltcsuite/lnd/esplora"
+	"github.com/ltcsuite/ltcd/chaincfg/chainhash"
+	"github.com/ltcsuite/ltcd/wire"
 )
 
 // EsploraFilteredChainView is an implementation of the FilteredChainView

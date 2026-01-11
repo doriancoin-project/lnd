@@ -14,9 +14,9 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/btcsuite/btcd/btcutil"
-	"github.com/btcsuite/btcd/chaincfg/chainhash"
-	"github.com/btcsuite/btcd/wire"
+	"github.com/ltcsuite/ltcd/chaincfg/chainhash"
+	"github.com/ltcsuite/ltcd/ltcutil"
+	"github.com/ltcsuite/ltcd/wire"
 )
 
 var (
@@ -541,7 +541,7 @@ func (c *Client) GetBlockTxIDs(ctx context.Context, blockHash string) ([]string,
 }
 
 // GetBlock fetches a full block with all transactions.
-func (c *Client) GetBlock(ctx context.Context, blockHash *chainhash.Hash) (*btcutil.Block, error) {
+func (c *Client) GetBlock(ctx context.Context, blockHash *chainhash.Hash) (*ltcutil.Block, error) {
 	hashStr := blockHash.String()
 
 	// Get block info for header data.
@@ -591,7 +591,7 @@ func (c *Client) GetBlock(ctx context.Context, blockHash *chainhash.Hash) (*btcu
 		Transactions: transactions,
 	}
 
-	return btcutil.NewBlock(&msgBlock), nil
+	return ltcutil.NewBlock(&msgBlock), nil
 }
 
 // GetTransaction fetches transaction information by txid.
