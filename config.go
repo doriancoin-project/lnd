@@ -247,10 +247,10 @@ var (
 	defaultTLSKeyPath     = filepath.Join(DefaultLndDir, defaultTLSKeyFilename)
 	defaultLetsEncryptDir = filepath.Join(DefaultLndDir, defaultLetsEncryptDirname)
 
-	defaultLtcdDir         = ltcutil.AppDataDir("ltcd", false)
+	defaultLtcdDir         = ltcutil.AppDataDir("dsvd", false)
 	defaultLtcdRPCCertFile = filepath.Join(defaultLtcdDir, "rpc.cert")
 
-	defaultLitecoindDir = ltcutil.AppDataDir("litecoin", false)
+	defaultLitecoindDir = ltcutil.AppDataDir("doriancoin", false)
 
 	defaultTorSOCKS   = net.JoinHostPort("localhost", strconv.Itoa(defaultTorSOCKSPort))
 	defaultTorDNS     = net.JoinHostPort(defaultTorDNSHost, strconv.Itoa(defaultTorDNSPort))
@@ -341,9 +341,9 @@ type Config struct {
 
 	FeeURL string `long:"feeurl" description:"Optional URL for external fee estimation. If no URL is specified, the method for fee estimation will depend on the chosen backend and network. Must be set for neutrino on mainnet."`
 
-	Litecoin      *lncfg.Chain    `group:"Litecoin" namespace:"litecoin"`
-	LtcdMode      *lncfg.Btcd     `group:"ltcd" namespace:"ltcd"`
-	LitecoindMode *lncfg.Bitcoind `group:"litecoind" namespace:"litecoind"`
+	Litecoin      *lncfg.Chain    `group:"Doriancoin" namespace:"doriancoin"`
+	LtcdMode      *lncfg.Btcd     `group:"dsvd" namespace:"dsvd"`
+	LitecoindMode *lncfg.Bitcoind `group:"doriancoind" namespace:"doriancoind"`
 	NeutrinoMode  *lncfg.Neutrino `group:"neutrino" namespace:"neutrino"`
 
 	BlockCacheSize uint64 `long:"blockcachesize" description:"The maximum capacity of the block cache"`
@@ -545,7 +545,7 @@ func DefaultConfig() Config {
 			FeeRate:       chainreg.DefaultLitecoinFeeRate,
 			TimeLockDelta: chainreg.DefaultLitecoinTimeLockDelta,
 			MaxLocalDelay: defaultMaxLocalCSVDelay,
-			Node:          "ltcd",
+			Node:          "neutrino",
 		},
 		LtcdMode: &lncfg.Btcd{
 			Dir:     defaultLtcdDir,
@@ -1130,10 +1130,10 @@ func ValidateConfig(cfg Config, interceptor signal.Interceptor, fileParser,
 	// Determine the active chain configuration and its parameters.
 	switch {
 
-	// Either Bitcoin must be active, or Litecoin must be active.
+	// Doriancoin must be active.
 	// Otherwise, we don't know which chain we're on.
 	case !cfg.Litecoin.Active:
-		return nil, mkErr("litecoin.active must be set " +
+		return nil, mkErr("doriancoin.active must be set " +
 			"to 1 (true)")
 
 	case cfg.Litecoin.Active:
@@ -1159,7 +1159,7 @@ func ValidateConfig(cfg Config, interceptor signal.Interceptor, fileParser,
 			ltcParams = chainreg.LitecoinSimNetParams
 		}
 		if cfg.Litecoin.SigNet {
-			return nil, mkErr("litecoin.signet is not supported")
+			return nil, mkErr("doriancoin.signet is not supported")
 		}
 
 		if numNets > 1 {
@@ -1172,8 +1172,8 @@ func ValidateConfig(cfg Config, interceptor signal.Interceptor, fileParser,
 		// The target network must be provided, otherwise, we won't
 		// know how to initialize the daemon.
 		if numNets == 0 {
-			str := "either --litecoin.mainnet, or " +
-				"litecoin.testnet must be specified"
+			str := "either --doriancoin.mainnet, or " +
+				"doriancoin.testnet must be specified"
 			return nil, mkErr(str)
 		}
 
@@ -1181,34 +1181,34 @@ func ValidateConfig(cfg Config, interceptor signal.Interceptor, fileParser,
 			minTimeLockDelta, funding.MinLtcRemoteDelay,
 		)
 		if err != nil {
-			return nil, mkErr("error validating litecoin params: %v",
+			return nil, mkErr("error validating doriancoin params: %v",
 				err)
 		}
 
 		cfg.ActiveNetParams = ltcParams
 
 		switch cfg.Litecoin.Node {
-		case "ltcd":
+		case "ltcd", "dsvd":
 			err := parseRPCParams(
 				cfg.Litecoin, cfg.LtcdMode,
-				chainreg.LitecoinChain, cfg.ActiveNetParams,
+				chainreg.DoriancoinChain, cfg.ActiveNetParams,
 			)
 			if err != nil {
 				return nil, mkErr("unable to load RPC "+
-					"credentials for ltcd: %v", err)
+					"credentials for dsvd: %v", err)
 			}
-		case "litecoind":
+		case "litecoind", "doriancoind":
 			if cfg.Litecoin.SimNet {
-				return nil, mkErr("litecoind does not " +
+				return nil, mkErr("doriancoind does not " +
 					"support simnet")
 			}
 			err := parseRPCParams(
 				cfg.Litecoin, cfg.LitecoindMode,
-				chainreg.LitecoinChain, cfg.ActiveNetParams,
+				chainreg.DoriancoinChain, cfg.ActiveNetParams,
 			)
 			if err != nil {
 				return nil, mkErr("unable to load RPC "+
-					"credentials for litecoind: %v", err)
+					"credentials for doriancoind: %v", err)
 			}
 		case "neutrino":
 			// No need to get RPC parameters.
@@ -1218,8 +1218,8 @@ func ValidateConfig(cfg Config, interceptor signal.Interceptor, fileParser,
 			// backend whatsoever (pure signing mode).
 
 		default:
-			str := "only ltcd, litecoind, and neutrino mode " +
-				"supported for litecoin at this time"
+			str := "only dsvd, doriancoind, and neutrino mode " +
+				"supported for doriancoin at this time"
 			return nil, mkErr(str)
 		}
 
@@ -1228,9 +1228,9 @@ func ValidateConfig(cfg Config, interceptor signal.Interceptor, fileParser,
 			chainreg.LitecoinChain.String(),
 		)
 
-		// Finally, we'll register the litecoin chain as our current
+		// Finally, we'll register the doriancoin chain as our current
 		// primary chain.
-		cfg.registeredChains.RegisterPrimaryChain(chainreg.LitecoinChain)
+		cfg.registeredChains.RegisterPrimaryChain(chainreg.DoriancoinChain)
 		MaxFundingAmount = funding.MaxLtcFundingAmount
 	}
 

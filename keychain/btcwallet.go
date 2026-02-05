@@ -23,9 +23,12 @@ const (
 	// derivation.
 	CoinTypeTestnet = 1
 
-	// CoinTypeLitecoin specifies the BIP44 coin type for Litecoin key
+	// CoinTypeDoriancoin specifies the BIP44 coin type for Doriancoin key
 	// derivation.
-	CoinTypeLitecoin = 2
+	CoinTypeDoriancoin = 1948
+
+	// CoinTypeLitecoin is an alias for backwards compatibility.
+	CoinTypeLitecoin = CoinTypeDoriancoin
 )
 
 var (

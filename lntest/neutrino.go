@@ -24,7 +24,7 @@ var _ node.BackendConfig = (*NeutrinoBackendConfig)(nil)
 // using this node as a chain backend.
 func (b NeutrinoBackendConfig) GenArgs() []string {
 	var args []string
-	args = append(args, "--litecoin.node=neutrino")
+	args = append(args, "--doriancoin.node=neutrino")
 	args = append(args, "--neutrino.connect="+b.minerAddr)
 	// We enable validating channels so that we can obtain the outpoint for
 	// channels within the graph and make certain assertions based on them.

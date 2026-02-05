@@ -5,15 +5,18 @@ package chainreg
 type ChainCode uint32
 
 const (
-	// LitecoinChain is Litecoin's chain.
-	LitecoinChain ChainCode = 1
+	// DoriancoinChain is Doriancoin's chain.
+	DoriancoinChain ChainCode = 1
+
+	// LitecoinChain is an alias for backwards compatibility.
+	LitecoinChain = DoriancoinChain
 )
 
 // String returns a string representation of the target ChainCode.
 func (c ChainCode) String() string {
 	switch c {
-	case LitecoinChain:
-		return "litecoin"
+	case DoriancoinChain:
+		return "doriancoin"
 	default:
 		return "kekcoin"
 	}

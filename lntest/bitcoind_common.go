@@ -44,21 +44,21 @@ var _ node.BackendConfig = (*BitcoindBackendConfig)(nil)
 // using this node as a chain backend.
 func (b BitcoindBackendConfig) GenArgs() []string {
 	var args []string
-	args = append(args, "--litecoin.node=litecoind")
-	args = append(args, fmt.Sprintf("--litecoind.rpchost=%v", b.rpcHost))
-	args = append(args, fmt.Sprintf("--litecoind.rpcuser=%v", b.rpcUser))
-	args = append(args, fmt.Sprintf("--litecoind.rpcpass=%v", b.rpcPass))
+	args = append(args, "--doriancoin.node=doriancoind")
+	args = append(args, fmt.Sprintf("--doriancoind.rpchost=%v", b.rpcHost))
+	args = append(args, fmt.Sprintf("--doriancoind.rpcuser=%v", b.rpcUser))
+	args = append(args, fmt.Sprintf("--doriancoind.rpcpass=%v", b.rpcPass))
 
 	if b.rpcPolling {
-		args = append(args, fmt.Sprintf("--litecoind.rpcpolling"))
+		args = append(args, fmt.Sprintf("--doriancoind.rpcpolling"))
 		args = append(args,
-			fmt.Sprintf("--litecoind.blockpollinginterval=10ms"))
+			fmt.Sprintf("--doriancoind.blockpollinginterval=10ms"))
 		args = append(args,
-			fmt.Sprintf("--litecoind.txpollinginterval=10ms"))
+			fmt.Sprintf("--doriancoind.txpollinginterval=10ms"))
 	} else {
-		args = append(args, fmt.Sprintf("--litecoind.zmqpubrawblock=%v",
+		args = append(args, fmt.Sprintf("--doriancoind.zmqpubrawblock=%v",
 			b.zmqBlockPath))
-		args = append(args, fmt.Sprintf("--litecoind.zmqpubrawtx=%v",
+		args = append(args, fmt.Sprintf("--doriancoind.zmqpubrawtx=%v",
 			b.zmqTxPath))
 	}
 

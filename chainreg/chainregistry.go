@@ -40,7 +40,7 @@ import (
 // Config houses necessary fields that a chainControl instance needs to
 // function.
 type Config struct {
-	// Litecoin defines settings for the Litecoin chain.
+	// Litecoin defines settings for the Doriancoin chain.
 	Litecoin *lncfg.Chain
 
 	// PrimaryChain is a function that returns our primary chain via its
@@ -55,10 +55,10 @@ type Config struct {
 	// light-client.
 	NeutrinoMode *lncfg.Neutrino
 
-	// LitecoindMode defines settings for connecting to a litecoind node.
+	// LitecoindMode defines settings for connecting to a doriancoind node.
 	LitecoindMode *lncfg.Bitcoind
 
-	// LtcdMode defines settings for connecting to an ltcd node.
+	// LtcdMode defines settings for connecting to a dsvd node.
 	LtcdMode *lncfg.Btcd
 
 	// HeightHintDB is a pointer to the database that stores the height
@@ -209,9 +209,9 @@ type ChainControl struct {
 }
 
 // GenDefaultBtcConstraints generates the default set of channel constraints
-// that are to be used when funding a Litecoin channel.
+// that are to be used when funding a Doriancoin channel.
 func GenDefaultBtcConstraints() channeldb.ChannelConstraints {
-	// TODO(litecoin): fix lnwallet.DustLimitForSize()
+	// TODO(doriancoin): fix lnwallet.DustLimitForSize()
 	// We use the dust limit for the maximally sized witness program with
 	// a 40-byte data push.
 	// dustLimit := lnwallet.DustLimitForSize(input.UnknownWitnessSize)
@@ -238,7 +238,7 @@ func NewPartialChainControl(cfg *Config) (*PartialChainControl, func(), error) {
 	}
 
 	switch cfg.PrimaryChain() {
-	case LitecoinChain:
+	case DoriancoinChain:
 		cc.RoutingPolicy = models.ForwardingPolicy{
 			MinHTLCOut:    cfg.Litecoin.MinHTLCOut,
 			BaseFee:       cfg.Litecoin.BaseFee,
@@ -311,11 +311,11 @@ func NewPartialChainControl(cfg *Config) (*PartialChainControl, func(), error) {
 			return err
 		}
 
-	case "litecoind":
+	case "litecoind", "doriancoind":
 		var bitcoindMode *lncfg.Bitcoind
 		bitcoindMode = cfg.LitecoindMode
 		// Otherwise, we'll be speaking directly via RPC and ZMQ to a
-		// litecoind node. If the specified host for the ltcd RPC
+		// doriancoind node. If the specified host for the dsvd RPC
 		// server already has a port specified, then we use that
 		// directly. Otherwise, we assume the default port according to
 		// the selected chain parameters.
@@ -540,10 +540,10 @@ func NewPartialChainControl(cfg *Config) (*PartialChainControl, func(), error) {
 			return err
 		}
 
-	case "ltcd":
+	case "ltcd", "dsvd":
 		// Otherwise, we'll be speaking directly via RPC to a node.
 		//
-		// So first we'll load ltcd's TLS cert for the RPC
+		// So first we'll load dsvd's TLS cert for the RPC
 		// connection. If a raw cert was specified in the config, then
 		// we'll set that directly. Otherwise, we attempt to read the
 		// cert from the path specified in the config.
@@ -810,28 +810,34 @@ func getBitcoindHealthCheckCmd(client *rpcclient.Client) (string, int64, error) 
 }
 
 var (
-	// LitecoinTestnetGenesis is the genesis hash of Litecoin's testnet4
-	// chain.
-	LitecoinTestnetGenesis = chainhash.Hash([chainhash.HashSize]byte{
-		0xa0, 0x29, 0x3e, 0x4e, 0xeb, 0x3d, 0xa6, 0xe6,
-		0xf5, 0x6f, 0x81, 0xed, 0x59, 0x5f, 0x57, 0x88,
-		0x0d, 0x1a, 0x21, 0x56, 0x9e, 0x13, 0xee, 0xfd,
-		0xd9, 0x51, 0x28, 0x4b, 0x5a, 0x62, 0x66, 0x49,
+	// DoriancoinTestnetGenesis is the genesis hash of Doriancoin's testnet4
+	// chain. (same as regtest genesis)
+	DoriancoinTestnetGenesis = chainhash.Hash([chainhash.HashSize]byte{
+		0x51, 0xbf, 0x2f, 0x59, 0xfd, 0xe1, 0x8e, 0x5b,
+		0x96, 0x5c, 0x32, 0x52, 0x18, 0x28, 0x45, 0x63,
+		0x22, 0x72, 0x0e, 0x5f, 0xbc, 0xcd, 0x75, 0x7b,
+		0xdd, 0x9f, 0xb5, 0x4e, 0x46, 0x69, 0x77, 0x70,
 	})
 
-	// LitecoinMainnetGenesis is the genesis hash of Litecoin's main chain.
-	LitecoinMainnetGenesis = chainhash.Hash([chainhash.HashSize]byte{
-		0xe2, 0xbf, 0x04, 0x7e, 0x7e, 0x5a, 0x19, 0x1a,
-		0xa4, 0xef, 0x34, 0xd3, 0x14, 0x97, 0x9d, 0xc9,
-		0x98, 0x6e, 0x0f, 0x19, 0x25, 0x1e, 0xda, 0xba,
-		0x59, 0x40, 0xfd, 0x1f, 0xe3, 0x65, 0xa7, 0x12,
+	// LitecoinTestnetGenesis is an alias for backwards compatibility.
+	LitecoinTestnetGenesis = DoriancoinTestnetGenesis
+
+	// DoriancoinMainnetGenesis is the genesis hash of Doriancoin's main chain.
+	DoriancoinMainnetGenesis = chainhash.Hash([chainhash.HashSize]byte{
+		0xb9, 0xd1, 0xe7, 0xd1, 0xc7, 0x23, 0x06, 0xcb,
+		0xb5, 0x71, 0x02, 0x41, 0x1b, 0x09, 0xc6, 0xeb,
+		0xe2, 0xfe, 0xc5, 0x69, 0x7d, 0x08, 0x56, 0x74,
+		0x0b, 0xd2, 0x7b, 0x27, 0x5e, 0xa2, 0x1d, 0xd2,
 	})
+
+	// LitecoinMainnetGenesis is an alias for backwards compatibility.
+	LitecoinMainnetGenesis = DoriancoinMainnetGenesis
 
 	// chainMap is a simple index that maps a chain's genesis hash to the
 	// ChainCode enum for that chain.
 	chainMap = map[chainhash.Hash]ChainCode{
-		LitecoinTestnetGenesis: LitecoinChain,
-		LitecoinMainnetGenesis: LitecoinChain,
+		DoriancoinTestnetGenesis: DoriancoinChain,
+		DoriancoinMainnetGenesis: DoriancoinChain,
 	}
 
 	// ChainDNSSeeds is a map of a chain's hash to the set of DNS seeds
@@ -847,17 +853,17 @@ var (
 	// TODO(roasbeef): extend and collapse these and chainparams.go into
 	// struct like chaincfg.Params.
 	ChainDNSSeeds = map[chainhash.Hash][][2]string{
-		LitecoinMainnetGenesis: {
+		DoriancoinMainnetGenesis: {
 			{
-				"ltc.lightning.loshan.co.uk",
-				"soa.lightning.loshan.co.uk",
+				"seed.doriancoin.org",
+				"seed.doriancoin.org",
 			},
 		},
 
-		LitecoinTestnetGenesis: {
+		DoriancoinTestnetGenesis: {
 			{
-				"tltc.lightning.loshan.co.uk",
-				"soa.lightning.loshan.co.uk",
+				"seed.doriancoin.org",
+				"seed.doriancoin.org",
 			},
 		},
 	}

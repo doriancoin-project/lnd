@@ -520,7 +520,7 @@ func (b *BtcWallet) FinalizePsbt(packet *psbt.Packet, accountName string) error 
 		accountNum = account
 	}
 
-	return b.wallet.FinalizePsbt(keyScope, accountNum, packet)
+	return b.wallet.FinalizePsbt(keyScope, accountNum, nil, packet)
 }
 
 // lookupFirstCustomAccount returns the first custom account found. In theory,

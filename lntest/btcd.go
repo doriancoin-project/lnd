@@ -43,7 +43,7 @@ var _ node.BackendConfig = (*BtcdBackendConfig)(nil)
 func (b BtcdBackendConfig) GenArgs() []string {
 	var args []string
 	encodedCert := hex.EncodeToString(b.rpcConfig.Certificates)
-	args = append(args, "--litecoin.node=ltcd")
+	args = append(args, "--doriancoin.node=dsvd")
 	args = append(args, fmt.Sprintf("--ltcd.rpchost=%v", b.rpcConfig.Host))
 	args = append(args, fmt.Sprintf("--ltcd.rpcuser=%v", b.rpcConfig.User))
 	args = append(args, fmt.Sprintf("--ltcd.rpcpass=%v", b.rpcConfig.Pass))

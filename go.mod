@@ -9,7 +9,6 @@ require (
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1
 	github.com/go-errors/errors v1.0.1
 	github.com/golang-migrate/migrate/v4 v4.16.1
-	github.com/golang/protobuf v1.5.3
 	github.com/gorilla/websocket v1.4.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
@@ -37,7 +36,7 @@ require (
 	github.com/ltcsuite/ltcd v0.23.6
 	github.com/ltcsuite/ltcd/btcec/v2 v2.3.2
 	github.com/ltcsuite/ltcd/chaincfg/chainhash v1.0.2
-	github.com/ltcsuite/ltcd/ltcutil v1.1.4
+	github.com/ltcsuite/ltcd/ltcutil v1.1.5-0.20250724031157-a9e8b8c8340e
 	github.com/ltcsuite/ltcd/ltcutil/psbt v1.1.8
 	github.com/ltcsuite/ltcwallet v0.16.11
 	github.com/ltcsuite/ltcwallet/wallet/txauthor v1.3.3
@@ -101,6 +100,7 @@ require (
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.2 // indirect
+	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/btree v1.0.1 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
@@ -174,7 +174,7 @@ require (
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.0.1 // indirect
 	go.opentelemetry.io/otel/sdk v1.0.1 // indirect
 	go.opentelemetry.io/otel/trace v1.0.1 // indirect
-	go.opentelemetry.io/proto/otlp v0.9.0 // indirect
+	go.opentelemetry.io/proto/otlp v0.19.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.24.0 // indirect
@@ -200,6 +200,17 @@ require (
 	sigs.k8s.io/yaml v1.2.0 // indirect
 )
 
+// Point to local dsvd fork with Doriancoin chain parameters.
+replace github.com/ltcsuite/ltcd => ../dsvd
+
+replace github.com/ltcsuite/ltcd/btcec/v2 => ../dsvd/btcec
+
+replace github.com/ltcsuite/ltcd/chaincfg/chainhash => ../dsvd/chaincfg/chainhash
+
+replace github.com/ltcsuite/ltcd/ltcutil => ../dsvd/ltcutil
+
+replace github.com/ltcsuite/ltcd/ltcutil/psbt => ../dsvd/ltcutil/psbt
+
 // This replace is for https://github.com/advisories/GHSA-25xm-hr59-7c27
 replace github.com/ulikunitz/xz => github.com/ulikunitz/xz v0.5.11
 
@@ -210,6 +221,7 @@ replace github.com/gogo/protobuf => github.com/gogo/protobuf v1.3.2
 // We want to format raw bytes as hex instead of base64. The forked version
 // allows us to specify that as an option.
 replace google.golang.org/protobuf => github.com/lightninglabs/protobuf-go-hex-display v1.30.0-hex-display
+
 replace github.com/lightningnetwork/lnd/tor => ./tor
 
 // If you change this please also update .github/pull_request_template.md and

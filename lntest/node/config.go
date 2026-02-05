@@ -157,7 +157,7 @@ func (cfg BaseNodeConfig) DBPath() string {
 
 func (cfg BaseNodeConfig) ChanBackupPath() string {
 	return filepath.Join(
-		cfg.DataDir, "chain", "litecoin",
+		cfg.DataDir, "chain", "doriancoin",
 		fmt.Sprintf(
 			"%v/%v", cfg.NetParams.Name,
 			chanbackup.DefaultBackupFileName,
@@ -194,25 +194,25 @@ func (cfg *BaseNodeConfig) GenArgs() []string {
 
 	switch cfg.NetParams {
 	case &chaincfg.TestNet4Params:
-		args = append(args, "--litecoin.testnet")
+		args = append(args, "--doriancoin.testnet")
 	case &chaincfg.SimNetParams:
-		args = append(args, "--litecoin.simnet")
+		args = append(args, "--doriancoin.simnet")
 	case &chaincfg.RegressionNetParams:
-		args = append(args, "--litecoin.regtest")
+		args = append(args, "--doriancoin.regtest")
 	}
 
 	backendArgs := cfg.BackendCfg.GenArgs()
 	args = append(args, backendArgs...)
 
 	nodeArgs := []string{
-		"--litecoin.active",
+		"--doriancoin.active",
 		"--nobootstrap",
 		"--debuglevel=debug,DISC=trace",
-		"--litecoin.defaultchanconfs=1",
+		"--doriancoin.defaultchanconfs=1",
 		"--accept-keysend",
 		"--keep-failed-payment-attempts",
 		fmt.Sprintf("--db.batch-commit-interval=%v", commitInterval),
-		fmt.Sprintf("--litecoin.defaultremotedelay=%v", DefaultCSV),
+		fmt.Sprintf("--doriancoin.defaultremotedelay=%v", DefaultCSV),
 		fmt.Sprintf("--rpclisten=%v", cfg.RPCAddr()),
 		fmt.Sprintf("--restlisten=%v", cfg.RESTAddr()),
 		fmt.Sprintf("--restcors=https://%v", cfg.RESTAddr()),
@@ -237,9 +237,9 @@ func (cfg *BaseNodeConfig) GenArgs() []string {
 		// updated quicker.
 		"--caches.rpc-graph-cache-duration=100ms",
 
-		// Speed up the tests for litecoind backend.
-		"--litecoind.blockpollinginterval=100ms",
-		"--litecoind.txpollinginterval=100ms",
+		// Speed up the tests for doriancoind backend.
+		"--doriancoind.blockpollinginterval=100ms",
+		"--doriancoind.txpollinginterval=100ms",
 	}
 
 	args = append(args, nodeArgs...)
