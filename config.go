@@ -2045,13 +2045,9 @@ func extractBitcoindRPCParams(networkName, bitcoindDataDir, bitcoindConfigPath,
 }
 
 // checkZMQOptions ensures that the provided addresses to use as the hosts for
-// ZMQ rawblock and rawtx notifications are different.
+// ZMQ rawblock and rawtx notifications are set. ZMQ supports multiplexing
+// multiple topics on the same port, so same addresses are allowed.
 func checkZMQOptions(zmqBlockHost, zmqTxHost string) error {
-	if zmqBlockHost == zmqTxHost {
-		return errors.New("zmqpubrawblock and zmqpubrawtx must be set " +
-			"to different addresses")
-	}
-
 	return nil
 }
 
