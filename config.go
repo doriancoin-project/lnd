@@ -1772,10 +1772,10 @@ func parseRPCParams(cConfig *lncfg.Chain, nodeConfig interface{},
 			}
 		}
 
-		daemonName = "litecoind"
+		daemonName = "doriancoind"
 		confDir = conf.Dir
 		confFile = conf.ConfigPath
-		confFileBase = "litecoin"
+		confFileBase = "doriancoin"
 
 		// Check that cookie and credentials don't contradict each
 		// other.
@@ -1855,7 +1855,7 @@ func parseRPCParams(cConfig *lncfg.Chain, nodeConfig interface{},
 		}
 		nConf.RPCUser, nConf.RPCPass = rpcUser, rpcPass
 
-	case "litecoind":
+	case "litecoind", "doriancoind":
 		nConf := nodeConfig.(*lncfg.Bitcoind)
 		rpcUser, rpcPass, zmqBlockHost, zmqTxHost, err :=
 			extractBitcoindRPCParams(netParams.Params.Name,
